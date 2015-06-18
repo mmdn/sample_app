@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def new
@@ -52,21 +53,6 @@ class UsersController < ApplicationController
     end
 
     # Before actions
-    def signed_in_user
-=begin
-      redirect_to signin_url, notice: "Please sign in." unless signed_in?
-      # 参考：上記の記述は flash[:notice]を簡素化している。処理的には以下の記述と同等。
-      unless signed_in?
-        flash[:notice] = "Please sign in."
-        redirect_to signin_url
-      end
-=end
-      unless signed_in?
-        store_location
-        redirect_to signin_url, notice: "Please sign in."
-      end
-    end
-
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
